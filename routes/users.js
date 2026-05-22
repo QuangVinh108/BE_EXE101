@@ -1,9 +1,13 @@
-var express = require('express');
-var router = express.Router();
+const express = require("express");
+const router = express.Router();
+const verifyFirebaseToken = require("../middleware/auth");
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+router.get("/profile", verifyFirebaseToken, async (req, res) => {
+  res.json({
+    success: true,
+    message: "User authenticated successfully",
+    user: req.user,
+  });
 });
 
 module.exports = router;
