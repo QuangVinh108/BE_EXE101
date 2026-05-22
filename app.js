@@ -1,8 +1,6 @@
 require('dotenv').config();
 
-var createError = require('http-errors');
 var express = require('express');
-var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
@@ -63,7 +61,7 @@ app.use('/api/tasks', taskRoutes);
 app.use('/api', applicationRoutes);
 app.use('/api', matchingRoutes);
 
-// User & Auth routes (from HEAD)
+// User & Auth routes
 app.use("/api/users", usersRouter);
 app.use("/api/auth", authRouter);
 
@@ -76,7 +74,6 @@ app.use(function(err, req, res, next) {
   const statusCode = err.status || 500;
   const message = err.message || 'Internal Server Error';
 
-  // Log error in development
   if (req.app.get('env') === 'development') {
     console.error('Error:', err);
   }
@@ -86,6 +83,16 @@ app.use(function(err, req, res, next) {
     message: message,
     ...(req.app.get('env') === 'development' && { stack: err.stack }),
   });
+});
+
+// ==========================================
+// START SERVER
+// ==========================================
+const port = process.env.PORT || 3000;
+
+app.listen(port, () => {
+  console.log(`🚀 Server is running at http://localhost:${port}`);
+  console.log(`📚 Swagger docs at http://localhost:${port}/api-docs`);
 });
 
 module.exports = app;
